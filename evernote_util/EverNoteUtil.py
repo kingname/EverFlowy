@@ -1,3 +1,46 @@
+"""
+EverNoteUtil.py
+~~~~~~~~~~~~~~~
+
+This module is used to generate the enml format content and then sync it to evernote.
+
+As every item in workflowy is in the format like:
+{
+    'nm': 'title',
+    'ch': [{'nm': '2.1'},
+           {'nm': '2.2',
+            'ch': [{
+                'nm': '2.2.1',
+                'ch': [{'nm': '2.2.1.1'}]
+            },
+                {'nm': '2.2.2'}]},
+           {'nm': '2.3'}]
+}
+
+this module will convert it to the `enml` format so that evernote could parse:
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
+<en-note>
+    <ul>
+        <li>2.1</li>
+        <li>
+            2.2
+            <ul>
+                <li>
+                    2.2.1
+                    <ul>
+                        <li>2.2.1.1</li>
+                    </ul>
+                </li>
+                <li>2.2.2</li>
+            </ul>
+        </li>
+        <li>2.3</li>
+    </ul>
+</en-note>
+
+Moreover, the `title` will be the title of a note in evernote.
+"""
 from xml.etree import ElementTree as ET
 from xml.dom.minidom import parseString
 from evernote.api.client import EvernoteClient

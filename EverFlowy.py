@@ -7,7 +7,7 @@ Everflowy is a tools to sync items from workflowy to Evernote.
 And This is the entrance of this tool.
 """
 import json
-from SqlUtil.SqlUtil import SqlUtil
+from sql_util.SqlUtil import SqlUtil
 from evernote_util.EverNoteUtil import EverNoteUtil
 from json.decoder import JSONDecodeError
 from workflowy_util.WorkflowyUtil import WorkflowyUtil
