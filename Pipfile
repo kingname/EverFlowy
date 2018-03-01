@@ -7,6 +7,7 @@ name = "pypi"
 
 [packages]
 
+"evernote3" = "*"
 requests = "*"
 
 
