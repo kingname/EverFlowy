@@ -18,25 +18,24 @@ class SqlUtil(object):
         self.conn.commit()
 
     def insert_history(self, history):
-        cursor = self.conn.cursor()
-        cursor.execute('insert into history values (null, ?, ?, ?, ?)', (history['workflowy_id'],
-                                                                         history['evernote_id'],
-                                                                         history['workflowy_item_json'],
-                                                                         history['item_enml']))
+        self.conn.execute('insert into history values (null, ?, ?, ?, ?)', (history['workflowy_id'],
+                                                                            history['evernote_id'],
+                                                                            history['workflowy_item_json'],
+                                                                            history['item_enml']))
         self.conn.commit()
-        cursor.close()
 
     def query_by_workflowy_id(self, workflowy_id):
-        cursor = self.conn.cursor()
-        cursor.execute('select * from history where workflowy_id=?', (workflowy_id, ))
-        row = cursor.fetchone()
-        if row:
+        result_generator = self.conn.execute('select * from history where workflowy_id=?', (workflowy_id, ))
+        for row in result_generator:
             return {'evernote_id': row['evernote_id'], 'item_enml': row['item_enml']}
         return None
 
+    def close(self):
+        self.conn.close()
+
 
 if __name__ == '__main__':
-    util = SqlUtil('test3.db')
+    util = SqlUtil('test4.db')
     util.prepare()
     util.insert_history({'workflowy_id': 'abc',
                          'evernote_id': 'bbb',
