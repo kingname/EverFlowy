@@ -1,4 +1,5 @@
 import sqlite3
+import datetime
 
 
 class SqlUtil(object):
@@ -14,18 +15,29 @@ class SqlUtil(object):
                        'workflowy_id text,'
                        'evernote_id varchar(64),'
                        'workflowy_item_json text,'
-                       'item_enml text)')
+                       'item_enml text,'
+                       'create_time timestamp)')
         self.conn.commit()
 
     def insert_history(self, history):
-        self.conn.execute('insert into history values (null, ?, ?, ?, ?)', (history['workflowy_id'],
-                                                                            history['evernote_id'],
-                                                                            history['workflowy_item_json'],
-                                                                            history['item_enml']))
+        self.conn.execute('insert into history values (null, ?, ?, ?, ?, ?)', (history['workflowy_id'],
+                                                                               history['evernote_id'],
+                                                                               history['workflowy_item_json'],
+                                                                               history['item_enml'],
+                                                                               datetime.datetime.now()))
+        self.conn.commit()
+
+    def insert_many_history(self, history_list):
+        parameter_list = [(history['id'],
+                           history['evernote_id'],
+                           history['detail_json'],
+                           history['body'],
+                           datetime.datetime.now()) for history in history_list]
+        self.conn.executemany('insert into history values (null, ?, ?, ?, ?, ?)', parameter_list)
         self.conn.commit()
 
     def query_by_workflowy_id(self, workflowy_id):
-        result_generator = self.conn.execute('select * from history where workflowy_id=?', (workflowy_id, ))
+        result_generator = self.conn.execute('select * from history where workflowy_id=? ORDER BY id limit 1', (workflowy_id, ))
         for row in result_generator:
             return {'evernote_id': row['evernote_id'], 'item_enml': row['item_enml']}
         return None

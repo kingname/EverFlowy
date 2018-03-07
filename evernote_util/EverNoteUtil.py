@@ -41,6 +41,7 @@ this module will convert it to the `enml` format so that evernote could parse:
 
 Moreover, the `title` will be the title of a note in evernote.
 """
+import json
 from xml.etree import ElementTree as ET
 from xml.dom.minidom import parseString
 from evernote.api.client import EvernoteClient
@@ -53,11 +54,23 @@ class EverNoteUtil(object):
         self.template = template
 
     def construct_body(self, project_list):
+        """
+
+        :param project_list:
+        :return: {"title": xxx,
+                  "body": xxx,
+                  "id": xxx,
+                  "detail_json": xxx}
+        """
         item_list = []
         for project in project_list:
             title = project['nm']
             detail = project.get('ch', [])
-            item_list.append({'title': title, 'body': self.generate_body(detail)})
+            _id = project['id']
+            item_list.append({'title': title,
+                              'body': self.generate_body(detail),
+                              'id': _id,
+                              'detail_json': json.dumps(detail)})
         return item_list
 
     def generate_body(self, detail):
@@ -74,7 +87,7 @@ class EverNoteUtil(object):
 
     def write_to_evernote(self, item_list):
         client = EvernoteClient(token=self.dev_token)
-        client.get_access_token()
+        # client.get_access_token()
         note_store = client.get_note_store()
         for item in item_list:
             body = ET.tostring(item['body']).decode()
@@ -82,5 +95,6 @@ class EverNoteUtil(object):
             note = Types.Note()
             note.title = item['title']
             note.content = self.template.format(body='\n'.join(pretty_body.split('\n')[1:]))
-            note_store.createNote(note)
+            received_note = note_store.createNote(note)
             print(item['title'])
+            item['evernote_id'] = received_note.Guid

@@ -44,9 +44,25 @@ class EverFlowy(object):
         print('start to construct body...')
         project_list = self.workflowy.get_outline()
         item_list = self.evernote.construct_body(project_list)
-        self.sql_util.insert_history(item_list)
+        item_to_update = self.filter_item_to_update(item_list)
         print('sync project to evernote.')
-        self.evernote.write_to_evernote(item_list)
+        self.evernote.write_to_evernote(item_to_update)
+        self.sql_util.insert_many_history(item_to_update)
+
+    def filter_item_to_update(self, item_list):
+        update_queue = []
+        for item in item_list:
+            workflowy_id = item['id']
+            exists_item = self.sql_util.query_by_workflowy_id(workflowy_id)
+            if not exists_item:
+                update_queue.append(item)
+                continue
+
+            old_enml = exists_item['item_enml']
+            if old_enml != item['body']:
+                item['evernote_id'] = old_enml['evernote_id']
+                update_queue.append(item)
+        return update_queue
 
 
 if __name__ == '__main__':
