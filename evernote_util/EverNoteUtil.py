@@ -90,6 +90,10 @@ class EverNoteUtil(object):
     def create_note(self, note_store, note):
         return note_store.createNote(note)
 
+    @retry(stop_after_attempt(3))
+    def update_note(self, note_store, note):
+        return note_store.updateNote(note)
+
     def write_to_evernote(self, item_list):
         client = EvernoteClient(token=self.dev_token)
         # client.get_access_token()
@@ -97,10 +101,15 @@ class EverNoteUtil(object):
         for item in item_list:
             body = ET.tostring(item['body']).decode()
             pretty_body = parseString(body).toprettyxml(indent='    ')
-            note = Types.Note()
-            note.title = item['title']
-            note.content = self.template.format(body='\n'.join(pretty_body.split('\n')[1:]))
-            received_note = self.create_note(note_store, note)
+            if 'evernote_id' in item:
+                note = note_store.getNote(item['evernote_id'], True, False, False, False)
+                note.content = self.template.format(body='\n'.join(pretty_body.split('\n')[1:]))
+                received_note = self.update_note(note_store, note)
+            else:
+                note = Types.Note()
+                note.title = item['title']
+                note.content = self.template.format(body='\n'.join(pretty_body.split('\n')[1:]))
+                received_note = self.create_note(note_store, note)
             print(item['title'])
             item['evernote_id'] = received_note.guid
             item['body'] = body
