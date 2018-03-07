@@ -22,6 +22,7 @@ class EverFlowy(object):
         self.read_config()
         self.workflowy = WorkflowyUtil(self.workflowy_username, self.workflowy_password)
         self.evernote = EverNoteUtil(self.dev_token, self.template)
+        self.sql_util = SqlUtil('history.db')
 
     def read_config(self):
         with open('config.json', encoding='utf-8') as f:
@@ -43,6 +44,7 @@ class EverFlowy(object):
         print('start to construct body...')
         project_list = self.workflowy.get_outline()
         item_list = self.evernote.construct_body(project_list)
+        self.sql_util.insert_history(item_list)
         print('sync project to evernote.')
         self.evernote.write_to_evernote(item_list)
 
