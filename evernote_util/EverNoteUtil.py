@@ -42,6 +42,7 @@ this module will convert it to the `enml` format so that evernote could parse:
 Moreover, the `title` will be the title of a note in evernote.
 """
 import json
+from tenacity import retry, stop_after_attempt
 from xml.etree import ElementTree as ET
 from xml.dom.minidom import parseString
 from evernote.api.client import EvernoteClient
@@ -85,6 +86,10 @@ class EverNoteUtil(object):
             ul.append(li)
         return ul
 
+    @retry(stop=stop_after_attempt(3))
+    def create_note(self, note_store, note):
+        return note_store.createNote(note)
+
     def write_to_evernote(self, item_list):
         client = EvernoteClient(token=self.dev_token)
         # client.get_access_token()
@@ -95,6 +100,7 @@ class EverNoteUtil(object):
             note = Types.Note()
             note.title = item['title']
             note.content = self.template.format(body='\n'.join(pretty_body.split('\n')[1:]))
-            received_note = note_store.createNote(note)
+            received_note = self.create_note(note_store, note)
             print(item['title'])
-            item['evernote_id'] = received_note.Guid
+            item['evernote_id'] = received_note.guid
+            item['body'] = body

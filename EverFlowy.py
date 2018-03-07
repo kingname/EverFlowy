@@ -25,7 +25,7 @@ class EverFlowy(object):
         self.sql_util = SqlUtil('history.db')
 
     def read_config(self):
-        with open('config.json', encoding='utf-8') as f:
+        with open('config_dev.json', encoding='utf-8') as f:
             config = f.read()
             try:
                 config_dict = json.loads(config)
@@ -43,8 +43,11 @@ class EverFlowy(object):
     def sync_project(self):
         print('start to construct body...')
         project_list = self.workflowy.get_outline()
-        item_list = self.evernote.construct_body(project_list)
+        item_list = self.evernote.construct_body(project_list)[:3]
         item_to_update = self.filter_item_to_update(item_list)
+        if not item_to_update:
+            print('all item are up-to-date.')
+            return
         print('sync project to evernote.')
         self.evernote.write_to_evernote(item_to_update)
         self.sql_util.insert_many_history(item_to_update)
@@ -58,8 +61,8 @@ class EverFlowy(object):
                 update_queue.append(item)
                 continue
 
-            old_enml = exists_item['item_enml']
-            if old_enml != item['body']:
+            old_enml = exists_item['detail_json']
+            if old_enml != item['detail_json']:
                 item['evernote_id'] = old_enml['evernote_id']
                 update_queue.append(item)
         return update_queue

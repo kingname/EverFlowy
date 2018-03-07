@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "0815596a3ae8c310a5072f1544e724d15abf90cd8e3b8689a431fee760d8bfc3"
+            "sha256": "b329518094fbad51a28933b634270493e0436883c2a44ddd5832f4e592066090"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -60,6 +60,13 @@
             ],
             "version": "==2.6"
         },
+        "monotonic": {
+            "hashes": [
+                "sha256:0bcd2b14e3b7ee7cfde796e408176ceffa01d89646f2e532964ef2aae0c9fa3e",
+                "sha256:a02611d5b518cd4051bf22d21bd0ae55b3a03f2d2993a19b6c90d9d168691f84"
+            ],
+            "version": "==1.4"
+        },
         "oauth2": {
             "hashes": [
                 "sha256:15b5c42301f46dd63113f1214b0d81a8b16254f65a86d3c32a1b52297f3266e6",
@@ -86,6 +93,20 @@
                 "sha256:883ac416757eada6d3d07054ec7092ac21c7f35cb1d2cf82faf205637081f468"
             ],
             "version": "==0.8.0"
+        },
+        "six": {
+            "hashes": [
+                "sha256:832dc0e10feb1aa2c68dcc57dbb658f1c7e65b9b61af69048abc87a2db00a0eb",
+                "sha256:70e8a77beed4562e7f14fe23a786b54f6296e34344c23bc42f07b15018ff98e9"
+            ],
+            "version": "==1.11.0"
+        },
+        "tenacity": {
+            "hashes": [
+                "sha256:13b65e38b90aec2763cdc262f4f3c392fbdc34dbf6d2b7ba8992032ce300b1a0",
+                "sha256:b53f3be7d5507d05910636acbde863d83e78845ff78e4e812dba38ffee69af84"
+            ],
+            "version": "==4.9.0"
         },
         "urllib3": {
             "hashes": [
