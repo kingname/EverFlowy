@@ -103,12 +103,12 @@ class EverNoteUtil(object):
             pretty_body = parseString(body).toprettyxml(indent='    ')
             if 'evernote_id' in item:
                 note = note_store.getNote(item['evernote_id'], True, False, False, False)
-                note.content = self.template.format(body='\n'.join(pretty_body.split('\n')[1:]))
+                note.content = self.template.format(body='\n'.join(pretty_body.split('\n')[1:]), workflowy_id=item['id'])
                 received_note = self.update_note(note_store, note)
             else:
                 note = Types.Note()
                 note.title = item['title']
-                note.content = self.template.format(body='\n'.join(pretty_body.split('\n')[1:]))
+                note.content = self.template.format(body='\n'.join(pretty_body.split('\n')[1:]), workflowy_id=item['id'])
                 received_note = self.create_note(note_store, note)
             print(item['title'])
             item['evernote_id'] = received_note.guid

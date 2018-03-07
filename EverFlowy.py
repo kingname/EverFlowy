@@ -22,7 +22,7 @@ class EverFlowy(object):
         self.read_config()
         self.workflowy = WorkflowyUtil(self.workflowy_username, self.workflowy_password)
         self.evernote = EverNoteUtil(self.dev_token, self.template)
-        self.sql_util = SqlUtil('history2.db')
+        self.sql_util = SqlUtil('history.db')
 
     def read_config(self):
         with open('config_dev.json', encoding='utf-8') as f:
@@ -43,7 +43,7 @@ class EverFlowy(object):
     def sync_project(self):
         print('start to construct body...')
         project_list = self.workflowy.get_outline()
-        item_list = self.evernote.construct_body(project_list)[:3]
+        item_list = self.evernote.construct_body(project_list)
         item_to_update = self.filter_item_to_update(item_list)
         if not item_to_update:
             print('all item are up-to-date.')

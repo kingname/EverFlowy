@@ -4,5 +4,5 @@
         "password": "12345678"
     },
     "dev_token": "xxxxxxxxxxxxxxxx",
-    "Content_template": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE en-note SYSTEM \"http://xml.evernote.com/pub/enml2.dtd\"><en-note>{body}</en-note>"
+    "Content_template": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE en-note SYSTEM \"http://xml.evernote.com/pub/enml2.dtd\"><en-note>{body}<p></p><a href=\"https://workflowy.com/#/{workflowy_id}\">转到Workflowy</a></en-note>"
 }
