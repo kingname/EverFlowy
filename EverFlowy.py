@@ -22,7 +22,7 @@ class EverFlowy(object):
         self.read_config()
         self.workflowy = WorkflowyUtil(self.workflowy_username, self.workflowy_password)
         self.evernote = EverNoteUtil(self.dev_token, self.template)
-        self.sql_util = SqlUtil('history.db')
+        self.sql_util = SqlUtil('history2.db')
 
     def read_config(self):
         with open('config_dev.json', encoding='utf-8') as f:
@@ -63,7 +63,7 @@ class EverFlowy(object):
 
             old_enml = exists_item['detail_json']
             if old_enml != item['detail_json']:
-                item['evernote_id'] = old_enml['evernote_id']
+                item['evernote_id'] = exists_item['evernote_id']
                 update_queue.append(item)
         return update_queue
 

@@ -90,7 +90,7 @@ class EverNoteUtil(object):
     def create_note(self, note_store, note):
         return note_store.createNote(note)
 
-    @retry(stop_after_attempt(3))
+    @retry(stop=stop_after_attempt(3))
     def update_note(self, note_store, note):
         return note_store.updateNote(note)
 
