@@ -22,10 +22,10 @@ class EverFlowy(object):
         self.read_config()
         self.workflowy = WorkflowyUtil(self.workflowy_username, self.workflowy_password)
         self.evernote = EverNoteUtil(self.dev_token, self.template)
-        self.sql_util = SqlUtil('history_product.db')
+        self.sql_util = SqlUtil('history.db')
 
     def read_config(self):
-        with open('config_dev.json', encoding='utf-8') as f:
+        with open('config.json', encoding='utf-8') as f:
             config = f.read()
             try:
                 config_dict = json.loads(config)

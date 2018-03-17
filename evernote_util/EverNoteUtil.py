@@ -96,7 +96,6 @@ class EverNoteUtil(object):
 
     def write_to_evernote(self, item_list):
         client = EvernoteClient(token=self.dev_token, sandbox=False, service_host='app.yinxiang.com')
-        # client.get_access_token()
         note_store = client.get_note_store()
         for item in item_list:
             body = ET.tostring(item['body']).decode()
